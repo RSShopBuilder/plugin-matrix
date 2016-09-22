@@ -33,4 +33,15 @@ class MatrixShop(key: Int, name: String, itemArray: List<Item>, currency: Int,
     override fun toString(): String {
         return "[$key] $name"
     }
+
+    companion object {
+        fun getDefault(): MatrixShop {
+            return MatrixShop(
+                    key = -1,
+                    name = "New Shop",
+                    itemArray = emptyList(),
+                    currency = 995,
+                    canSellTo = false)
+        }
+    }
 }

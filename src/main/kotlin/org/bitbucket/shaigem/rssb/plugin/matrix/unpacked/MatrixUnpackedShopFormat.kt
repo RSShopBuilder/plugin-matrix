@@ -11,6 +11,9 @@ import org.bitbucket.shaigem.rssb.plugin.matrix.MatrixShop
 import java.io.File
 import java.util.*
 
+/**
+ * Defines the packed shop format for Matrix servers.
+ */
 class MatrixUnpackedShopFormat : ShopFormat<MatrixShop> {
 
     override val defaultFileName: String = "unpackedShops.txt"
@@ -18,12 +21,7 @@ class MatrixUnpackedShopFormat : ShopFormat<MatrixShop> {
     override val extensions: List<FileChooser.ExtensionFilter>
             = arrayListOf(ext("Text Files", "*.txt"))
 
-    override val defaultShop: MatrixShop = MatrixShop(
-            key = -1,
-            name = "New Shop",
-            itemArray = emptyList(),
-            currency = 995,
-            canSellTo = false)
+    override val defaultShop: MatrixShop = MatrixShop.getDefault()
 
     override fun descriptor(): ShopFormatDescriptor {
         return ShopFormatDescriptor(
@@ -72,7 +70,6 @@ class MatrixUnpackedShopFormat : ShopFormat<MatrixShop> {
     }
 
     override fun export(selectedFile: File, shopsToExport: ObservableList<MatrixShop>) {
-        //
         selectedFile.bufferedWriter().use { writer ->
             writer.write("//shopId money generalstore - name - item quantity item quantity etc.")
             writer.newLine()
