@@ -5,7 +5,7 @@ import javafx.stage.FileChooser
 import org.bitbucket.shaigem.rssb.model.item.Item
 import org.bitbucket.shaigem.rssb.plugin.ShopFormat
 import org.bitbucket.shaigem.rssb.plugin.ShopFormatDescriptor
-import org.bitbucket.shaigem.rssb.plugin.ext
+import org.bitbucket.shaigem.rssb.plugin.extension
 import org.bitbucket.shaigem.rssb.plugin.matrix.MatrixShop
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -16,16 +16,22 @@ import java.util.*
  * Defines the packed shop format for Matrix servers.
  */
 class MatrixPackedShopFormat : ShopFormat<MatrixShop> {
+
     override val defaultFileName: String = "packedShops.s"
 
     override val extensions: List<FileChooser.ExtensionFilter>
-            = arrayListOf(ext(description = "Packed Files", extension = "*.s"))
+            = arrayListOf(extension(description = "Packed Files", extension = "*.s"))
 
     override val defaultShop: MatrixShop = MatrixShop.getDefault()
 
+    override fun descriptor(): ShopFormatDescriptor {
+        return ShopFormatDescriptor(
+                name = "Matrix Packed",
+                description = "Edit packed Matrix shops ($defaultFileName)")
+    }
+
     override fun load(selectedFile: File): ArrayList<MatrixShop> {
         val shops = arrayListOf<MatrixShop>()
-
         val dataInputStream = DataInputStream(selectedFile.inputStream())
         dataInputStream.use { stream ->
             while (stream.available() > 0) {
@@ -59,12 +65,6 @@ class MatrixPackedShopFormat : ShopFormat<MatrixShop> {
                 }
             }
         }
-    }
-
-    override fun descriptor(): ShopFormatDescriptor {
-        return ShopFormatDescriptor(
-                name = "Matrix Packed",
-                description = "Edit packed Matrix shops (packedShops.s).")
     }
 
     private fun DataInputStream.readAlexString(): String {

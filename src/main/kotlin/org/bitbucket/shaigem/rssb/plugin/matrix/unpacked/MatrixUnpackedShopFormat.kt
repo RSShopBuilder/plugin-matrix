@@ -6,27 +6,27 @@ import org.bitbucket.shaigem.rssb.model.item.Item
 import org.bitbucket.shaigem.rssb.plugin.ShopFormat
 import org.bitbucket.shaigem.rssb.plugin.ShopFormatDescriptor
 import org.bitbucket.shaigem.rssb.plugin.ShopLoadException
-import org.bitbucket.shaigem.rssb.plugin.ext
+import org.bitbucket.shaigem.rssb.plugin.extension
 import org.bitbucket.shaigem.rssb.plugin.matrix.MatrixShop
 import java.io.File
 import java.util.*
 
 /**
- * Defines the packed shop format for Matrix servers.
+ * Defines the unpacked shop format for Matrix servers.
  */
 class MatrixUnpackedShopFormat : ShopFormat<MatrixShop> {
 
     override val defaultFileName: String = "unpackedShops.txt"
 
     override val extensions: List<FileChooser.ExtensionFilter>
-            = arrayListOf(ext("Text Files", "*.txt"))
+            = arrayListOf(extension("Text Files", "*.txt"))
 
     override val defaultShop: MatrixShop = MatrixShop.getDefault()
 
     override fun descriptor(): ShopFormatDescriptor {
         return ShopFormatDescriptor(
                 name = "Matrix Unpacked",
-                description = "Edit unpacked Matrix shops (unpackedShops.txt).")
+                description = "Edit unpacked Matrix shops ($defaultFileName)")
     }
 
     override fun load(selectedFile: File): ArrayList<MatrixShop> {
@@ -50,12 +50,12 @@ class MatrixUnpackedShopFormat : ShopFormat<MatrixShop> {
             val shopName = splitStringList[1]
 
             fun readItems(): List<Item> {
-                val shopItemsStringList: List<String> = splitStringList[2].split(" ").filterNot { it.isNullOrEmpty() }
+                val shopItemsStringList: List<String> = splitStringList[2].split(" ").filterNot(String::isNullOrEmpty)
                 // Get every element with a even (0, 2, 4...) index for the item id
-                val shopItemIdentifiers = shopItemsStringList.filterIndexed { i, s -> (i % 2) == 0 }.map { it.toInt() }
+                val shopItemIdentifiers = shopItemsStringList.filterIndexed { i, s -> (i % 2) == 0 }.map(String::toInt)
                 // Get every element with a odd (1, 3, 5...) index for the amount
-                val shopItemAmounts = shopItemsStringList.filterIndexed { i, s -> (i % 2) != 0 }.map { it.toInt() }
-                return shopItemIdentifiers.zip(shopItemAmounts, { id, amount -> Item(id, amount) })
+                val shopItemAmounts = shopItemsStringList.filterIndexed { i, s -> (i % 2) != 0 }.map(String::toInt)
+                return shopItemIdentifiers.zip(shopItemAmounts, ::Item)
             }
 
             val shopItems = readItems()
@@ -64,7 +64,7 @@ class MatrixUnpackedShopFormat : ShopFormat<MatrixShop> {
         }
 
         selectedFile.bufferedReader().readLines().filterNot { it.isNullOrEmpty() || it.startsWith("//") }.
-                map { it.split(" - ", limit = 3) }.forEach { parseShop(it) }
+                map { it.split(" - ", limit = 3) }.forEach(::parseShop)
 
         return shops
     }

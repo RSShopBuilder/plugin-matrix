@@ -14,10 +14,8 @@ class MatrixUnpackedShopPlugin : BaseShopFormatPlugin() {
 
     override val format: ShopFormat<MatrixShop> = MatrixUnpackedShopFormat()
 
-    override fun addColumnToExplorer() {
-        column<MatrixShop, Int>(title = "Key") {
-            SimpleIntegerProperty(it.value.key).asObject()
-        }
+    override fun populateExtraExplorerColumns() {
+        column<MatrixShop, Int>(title = "Key") { SimpleIntegerProperty(it.value.key).asObject() }
     }
 }
 
@@ -27,9 +25,7 @@ class MatrixPackedShopPlugin : BaseShopFormatPlugin() {
 
     override val format: ShopFormat<MatrixShop> = MatrixPackedShopFormat()
 
-    override fun addColumnToExplorer() {
-        column<MatrixShop, Int>(title = "Key") {
-            SimpleIntegerProperty(it.value.key).asObject()
-        }
+    override fun populateExtraExplorerColumns() {
+        column<MatrixShop, Int>(title = "Key") { SimpleIntegerProperty(it.value.key).asObject() }
     }
 }
